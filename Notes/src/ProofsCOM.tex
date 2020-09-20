@@ -1,0 +1,232 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1in, paperwidth=8.3in, paperheight=11.7in]{geometry}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{changepage} 
+
+\begin{document}
+
+\pagestyle{fancy}
+\setlength\parindent{0pt}
+\allowdisplaybreaks
+
+\renewcommand{\headrulewidth}{0pt}
+
+% Cover page title
+\title{Combinatorics - Proofs}
+\author{Dom Hutchinson}
+\date{\today}
+\maketitle
+
+% Header
+\fancyhead[L]{Dom Hutchinson}
+\fancyhead[C]{Combinatorics - Proofs}
+\fancyhead[R]{\today}
+
+% commands
+\newcommand{\dotprod}[0]{\boldsymbol{\cdot}}
+\newcommand{\cosech}[0]{\mathrm{cosech}\ }
+\newcommand{\cosec}[0]{\mathrm{cosec}\ }
+\newcommand{\sech}[0]{\mathrm{sech}\ }
+\newcommand{\blocks}[0]{\mathbb{B}}
+\newcommand{\nats}[0]{\mathbb{N}}
+\newcommand{\reals}[0]{\mathbb{R}}
+\newcommand{\rank}[0]{\mathrm{rank}}
+\newcommand{\integers}[0]{\mathbb{Z}}
+\newcommand{\nb}[0]{\textit{N.B.} }
+
+\section*{Fisher's Inequality}
+Let $(V,\mathbb{B})$ be a block design of type $2-(v,k,\lambda)$ with $v>k$ then $|\mathbb{B}|\geq|V|$.
+
+\begin{proof}\hfill\\
+Let $A\in\reals^{|V|\times|\mathbb{B}|}$ be the incidence matric of $(V,\mathbb{B})$.\\
+Then $B:=AA^T$ is $|V|\times|V|$ matrix with $B_{i,i}=r$ and $B_{i,j}=\lambda$ for $i\neq j$ (since $t=2$).\\
+By elementary row operations we find
+\[\begin{array}{rcl|l}
+\det(B)&=&\det\begin{pmatrix}r&\lambda&\dots&\lambda\\\lambda&r&\dots&\lambda\\\vdots&\vdots&\ddots&\vdots\\\lambda&\lambda&\dots&r\end{pmatrix}\\
+&=&\det\begin{pmatrix}r+(v-1)\lambda&r+(v-1)\lambda&\dots&r+(v-1)\lambda\\\lambda&r&\dots&\lambda\\\vdots&\vdots&\ddots&\vdots\\\lambda&\lambda&\dots&r\end{pmatrix}&R_1\mapsto\sum_{i=1}^vR_i\\
+&=&[r+(v-1)\lambda]\det\begin{pmatrix}1&1&\dots&1\\\lambda&r&\dots&\lambda\\\vdots&\vdots&\ddots&\vdots\\\lambda&\lambda&\dots&r\end{pmatrix}\\
+&=&[r+(v-1)\lambda]\det\begin{pmatrix}1&1&\dots&1\\0&(r-\lambda)&\dots&0\\\vdots&\vdots&\ddots&\vdots\\0&0&\dots&(r-\lambda)\end{pmatrix}&R_i\mapsto R_i-\lambda R_i,\ i\in[2,v]\\
+&=&[r+(v-1)\lambda](r-\lambda)^{v-1}
+\end{array}\]
+Since $k<v$, by condition, so $1<\frac{v-1}{k-1}=\frac{r}{\lambda}\implies r-\lambda>0$.\\
+Since $v,\lambda>0$, by definition of a block design, $(v-1)\lambda>0\implies r+(v-1)\lambda>0$.\\
+Thus $[r+(v-1)\lambda](r-\lambda)^{v-1}.0\implies\det(B)>0\implies B$ is non-singular.\\
+Since $B\in\reals^{v\times v}$ and non-singular, then $\rank(B)=v$ (Number of columns).\\
+$$v=\rank(B)=\rank(AA^T)\leq\min\{\rank(A),\rank(A^T)\}\leq^{[1]} |\mathbb{B}|\equiv |V|\leq |\mathbb{B}|$$
+\end{proof}
+
+\par\noindent\rule{\textwidth}{0.4pt}
+
+$^{[1]}$ The rank of a matrix cannot be greater than the number of columns in it. $A$ has $|\mathbb{B}|$ columns.
+
+\newpage
+\section*{Dirac's Theorem}
+Let $G$ be a graph of degree $n\geq3$.\\
+If $\delta(G)\geq\frac{n}{2}$ then $G$ is hamiltonian.
+
+\begin{proof}\hfill\\
+Let $P=\{x_1,\dots,x_k\}$ be the longest path in $G$.\\
+Suppose $x_1$ is adjacent to $u\not\in P$, then $uP$ would be a longer path that $P$ which causes a contradicition on $P$ being the longest path in $G$. Thus $x_1$ is only adjcent to vertices in $P$.\\
+A similar argument can be made for $x_k$ being only adjacent to vertices in $P$.\\
+Since $deg_G(p_1)\geq\frac{n}{2}$, by condition, and it cannot be adjacent to itself then $|P|=k\geq\frac{n}{2}+1$.\\
+\\
+\textit{Claim} - $\exists\ j\in[1,k]$ st $p_j$ is adjacent to $x_k$ \& $p_{j+1}$ is adjacent to $x_1$.\\
+\textit{Proof} - This is a proof of the claim, by contradiction. Suppose no such $j$ exists.\\
+Then, there must be at least $deg_G(x_1)$ vertices in $P$ which are not adjacent to $x_k$.\\
+Further, there must be at least $deg_G(x_1)$ vertices in $P$ which are not adjacent to $x_1$.\\
+Thus $|P|=k\geq deg_G(x_1)+deg_G(x_k)+2\geq^{[1]}\frac{n}{2}+\frac{n}{2}+2=n+2$.\\
+This is a contraction since $|V|=n$. Thus such a $j$ exists.\\
+\\
+This creates a cycle $C:=\{x_{j+1},\dots,x_k,x_j,\dots,x_1,\dots,x_{j+1}\}$.\\
+Suppose $V_G\neq V_C$ is non-empty, then since $G$ is connected $\exists\ v\in V_{G\backslash C}$ which is adjacent to $x_i$.\\
+So the path from $v\to\ x_i$ and then around $C$ is longer than $P$.\\
+This is a contradiction to the definition to $P$ being the longest path in $G$.\\
+Therefore no such $v$ exists$\implies\ V_G=V_C$ making $C$ a hamiltonian cycle.
+\end{proof}
+
+\par\noindent\rule{\textwidth}{0.4pt}
+
+$^{[1]}$ By condition.
+
+\newpage
+\section*{Hall's Theorem}
+Let $G=(X\cup Y,E)$ be a bipartite graph. Then
+\begin{center}
+$G$ contains a matching from $X$ to $Y$ iff $\forall\ S\subseteq X,\ |N_G(S)|\geq|S|$.
+\end{center}
+
+\begin{proof}\hfill\\
+If a mathching exists then clearly all $S\subseteq X$ has at least $|S|$ neighbours in $Y$.\\
+We prove the other direction by induction on $|X|$.\\
+
+\underline{Base Case} - $|X|=1$.\\
+Here a matching is obvious since $|N_G(x)|\geq1=|X|$.\\
+
+\underline{Inductive Hypothesis} - For $|X|=n$ if $\forall\ S\subseteq X,\ |N_G(S)|\geq|S|$ then there exists a matching from $X$ to $Y$.\\
+
+\underline{Inductive Case} - $|X|=n+1$.\\
+We distinguish two cases for the size of the neighbourhood of $S$.\\
+\textit{Case 1} - $|N_G(S)|>|S|$.
+\begin{adjustwidth}{1cm}{}
+Consider removing a $x\in X,\ y\in Y$ which share an edge, this produces a bipartite graph $G'$ whose first vertex class is of size $|X|-1$ \& satisfies that $|N_{G'}(S)|\geq|S|\ \forall\ S\ \subseteq X$ by case condition.\\
+By the inductive hypothesis a matching, $M$, exists in this reduced bipartite graph.\\
+By adding back in $x\ \&\ y$ and adding their shared edge $M$ produces a matching in $G$.\\
+Thus, result holds in this case.
+\end{adjustwidth}
+\textit{Case 2} - $|N_G(S)|=|S|$.
+\begin{adjustwidth}{1cm}{}
+Consider the bipartite graph $G':=(S\cup N_G(S), E')$ where $E'$ is just the edges running between $S$ \& $N_G(S)$.\\
+Since $\forall\ T\subseteq S,\ |N_{G'}(T)|=|N_G(T)|\geq|T|$ the inductive hypothesis can be applied to say $G'$ contains a matching.\\
+Consider the graph $G'':=(X\backslash S,Y\backslash N_G(S),E'')$.\\
+Since $\forall\ T\subseteq X\backslash S,\ |N_G(T\cup S)|\geq|T|+|S|\implies|N_{G''}(T)|=|N_G(T\cup S)\backslash N_G(S)|\geq|T|$ the inductive hypothesis can be applied to show a mapping exists in $G''$.\\
+By combining the mappings in $G'$ \& $G''$ we produce a mapping in $G$, thus the result holds in this case.\\
+\end{adjustwidth}
+Since the result holds for all cases, by the process of the mathematical induction the result holds forall size of $X$.
+\end{proof}
+
+\newpage
+\section*{Mantel's Theorem}
+Let $G=(V,E)$ be a graph with $n:=|V|$ vertices containing no 3-cycles. Then
+\begin{enumerate}
+	\item $|E|\leq\left\lfloor\dfrac{n^2}{4}\right\rfloor$; \&,
+	\item There exists a $G$ for which this is an equality. \textit{i.e.} $|E|=\left\lfloor\dfrac{n^2}{4}\right\rfloor$.
+\end{enumerate}
+
+\begin{proof}\hfill\\
+Define $m:=|E|$.\\
+For any edge $\{x,y\}$ we note that $deg_G(x)+deg_G(y)\leq n$ since there are no 3-cycles \& thus no vertex is connected to both $x$ \& $y$.\\
+We have
+$$\sum_{v\in V}deg_G(v)^2=\sum_{\{x,y\}\in E}(deg_G(x)+deg_G(y))\leq mn$$
+Additionally, by the Cauchy-Schwarz inequality
+$$\sum_{v\in V}deg_G(v)^2\geq\frac{1}{n}\left(\sum_{v\in V}deg_G(v)\right)^2=\frac{1}{n}(2m)^2=\frac{4m^2}{n}$$
+Thus $mn\leq \frac{4m^2}{n}\implies m\leq\frac{n^2}{4}$.\\
+Since $m\in\nats$ we can further state that $m\leq\left\lfloor\frac{n^2}{4}\right\rfloor$.
+\end{proof}
+
+\begin{proof}\hfill\\
+To show there exists a $G$ st $|E|=\left\lfloor\frac{n^2}{4}\right\rfloor$ it suffices to provide an example.\\
+Consider $K_{\lfloor n/2\rfloor,\lceil n/2\rceil}$. If $n$ is even then
+$$|E|=\frac{n}{2}\left(n-\frac{n}{2}\right)=\frac{n^2}{4}=^{[1]}\left\lfloor\frac{n^2}{4}\right\rfloor$$
+If $n$ is odd then
+$$|E|=\frac{n-1}{2}\left(n-\frac{n-1}{2}\right)=\frac{1}{4}(n^2-1)=\frac{n^2}{4}-\frac{1}{4}=\left\lfloor\frac{n^2}{4}\right\rfloor$$
+The result holds.
+\end{proof}
+
+\par\noindent\rule{\textwidth}{0.4pt}
+
+$^{[1]}$ Since $n$ is even.
+
+\newpage
+\section*{Tur\'an's Theorem}
+Let $G=(V,E)$ be a graph on $n:=|V|$ vertices with no $k$-cliques. Then $|E|\leq|E(T_{k-1}(n))|$.
+\begin{proof}
+This is a proof by induction on $n$.\\
+\underline{Base Case} - $n<k$.
+In this case $T_{k-1}(n)$ must be a complete graph on $n$ vertices.\\
+Trivally $|E|\leq|E_{K_n}|$.\\
+
+\underline{Inductive Case} - $n\geq k$.\\
+$G$ must contain a $(k-1)$-clique, otherwise adding an edge to $G$ could not yield a $k$-clique. Contradicting the maximality of $G$.\\
+Let $A=(E_a,V_a)$ be the induced subgraph of $G$ that is $K_{k-1}$. Then $|E_A|={{r-1}\choose{2}}$.\\
+Consider the graph $B:=G\backslash A\implies|V_B|=n-(k-1)=n-k+1$ so by the inductive hypothesis $|E_B|\leq|E(T_{k}(n-k+1))|=\frac{(k-1)(n-k+1)^2}{2k}$.\\
+Since every vertex in $B$ is adjacent to at most $k-2$ vertices in $A$, there are at most $(n-k+1)(k-2)$ edges between $A$ \& $B$.\\
+Combing these counts we have
+\[\begin{array}{rcl|l}
+|E|&\leq&{{k-1}\choose{2}}+\frac{(k-1)(n-k+1)^2}{2k}+(n-k+1)(k-2)\\
+&\leq&\frac{(k-1)n^2}{2k-2}&\mathrm{Trust\ me}\\
+&=&|E(T_{k-1}(n))|
+\end{array}\]
+\end{proof}
+
+\newpage
+\section*{Euler's Formula}
+Let $G=(V,E)$ be a connected planar graph. Then $|V|-|E|+|F|=2$ where $F$ is the set of faces of $G$.
+
+\begin{proof}
+This is a proof by induction on the number of edges in $G$.\\
+\underline{Base Case} - $|E|=0$.\\
+Since $G$ is connected this means just one vertex \& just one face.\\
+Thus, $|V|-|E|+|F|=1-0+1=2$.\\
+
+\underline{Inductive Case} - $|E|\geq1$.\\
+Here we consider $2$ cases.\\
+\textit{Case 1} - $G$ contains no cycles.
+\begin{adjustwidth}{1cm}{}
+Then $G$ is a tree$\implies|E|=|V|-1$ \& there is only one face.\\
+Thus, $|V|-|E|+|F|=|V|-(|V|-1)+1=2$. The result holds in this case.\\
+\end{adjustwidth}
+\textit{Case 2} - $G$ contains at least one cycle
+\begin{adjustwidth}{1cm}{}
+Choose a cycle in $G$ \& $e\in E$ an edge in this cycle.\\
+Consider $G'=(V,E\backslash e)$ this is still connected so we can apply the inductive hypothesis.\\
+Let $F'$ be the face set of a planar drawing of $G'$, then $|V| - (|E|-1)+|F'|=2$.\\
+Since $e$ is adjacent to two distinct faces of the drawing of $G$, its remove merges these two faces into one face. Thys $|F'|=|F|-1$.\\
+Thus
+$$|V|-|E|+|F|=|V|-|E|+(|F'|+1)=|V|-(|E|-1)+|F'|=2$$
+\end{adjustwidth}
+Since the result holds for all cases, by the pocess of mathematical induction the result holds for all planar drawings of connected planar graphs.\\
+\end{proof}
+
+\newpage
+\section*{Ramsey's Theorem}
+$\forall\ s,t\in\nats^{\geq2},\ r(s,t)$ exists \& $r(s,t)\leq r(s-1,t)+r(s,t-1)$.
+
+\begin{proof}\hfill\\
+Consider a two colouring of the edges on the complete graph on $r(s-1,t)+r(s,t-1)$ vertices.\\
+Pick a vertex $v$ and parition the rest of the graph st all vertices which share a red edge with $v$ are in set $M$, \& all those that share a blude edge with $v$ are in set $N$.\\
+We have $r(s-1,t)+r(s,t-1)=|M|+|N|+1$ then either $|M|\geq r(s-1,t)$ or $|N|\geq r(s,t-1)$.\\
+If the former is true then either: $M$ contains a blue $K_t$ \& we are done; or, $M$ contains a red $K_{s-1}$ meaning $M\cup\{v\}$ has a blue $K_s$.\\
+An analogous argument is made for $N$.\\
+Thus the claim holds.
+\end{proof}
+
+\end{document}
